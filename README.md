@@ -1,2 +1,11 @@
 # classification_with_knowledge_distillation
-The usage of knowledge distillation technique in classification problems
+
+## Discription
+Author: Vuong Gia Huy
+
+The usage of knowledge distillation technique in classification problems. 
+
+## Installation
+```
+pip install -r requirements.txt
+```
