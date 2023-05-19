@@ -29,15 +29,15 @@ class FruitDataset(Dataset):
             img = self.transform(img)
         return img, label
 
-def get_dataloader(data_root, batch_size, num_workers, shuffle = True):
+def get_dataloader(data_root, batch_size, shuffle = True):
     dataset = FruitDataset(data_root)
-    dataloader = DataLoader(dataset, batch_size = batch_size, num_workers = num_workers, shuffle = shuffle)
+    dataloader = DataLoader(dataset, batch_size = batch_size, shuffle = shuffle)
     return dataloader
 
 if __name__ == '__main__':
     data_root = './data/train'
     dataset = FruitDataset(data_root)
-    get_dataloader = get_dataloader(data_root, 16, 4)
-    for img, label in tqdm(dataset):
-        print(img.shape)
+    dataloader = get_dataloader(data_root, 16)
+    for samples, targets in tqdm(dataloader):
+        print(samples.shape)
         pass
