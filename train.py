@@ -52,7 +52,6 @@ def main(args):
     weights = None
     epochs = args.num_epochs
     criterion = torch.nn.CrossEntropyLoss()
-    print(1)
 
     for epoch in range(epochs):
         # Training
