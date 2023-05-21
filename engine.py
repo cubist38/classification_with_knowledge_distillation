@@ -7,14 +7,19 @@ def train_one_epoch(model,
                     optimizer, 
                     device):
     model.train()
+    running_loss = 0.0
+    total_samples = 0
     for samples, targets in tqdm.tqdm(dataloader, total = len(dataloader)):
         samples = samples.to(device)
         targets = targets.to(device)
         optimizer.zero_grad()
         outputs = model(samples)
         loss = criterion(outputs, targets)
+        running_loss += loss.item()
         loss.backward()
         optimizer.step()
+        total_samples += samples.size(0)
+    return running_loss/total_samples
 
 def eval(model, dataloader, criterion, device):
     model.eval()
