@@ -64,7 +64,7 @@ def main(args):
         scheduler.step()
         print('Epoch: {} - Train loss: {:.4f}'.format(epoch, train_loss))
         # Evaluation
-        if epoch > 0 and epoch % 5 == 0:
+        if epoch > 0 and epoch % args.step_eval_epoch == 0:
             eval_loss = eval(model,
                             test_dataloader,
                             criterion,
