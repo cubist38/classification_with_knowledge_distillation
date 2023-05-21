@@ -24,7 +24,6 @@ def train_one_epoch(model,
 def eval(model, dataloader, criterion, device):
     model.eval()
     total_loss = 0
-    total_correct = 0
     total_samples = 0
     with torch.no_grad():
         for samples, targets in tqdm.tqdm(dataloader, total = len(dataloader)):
@@ -33,6 +32,5 @@ def eval(model, dataloader, criterion, device):
             outputs = model(samples)
             loss = criterion(outputs, targets)
             total_loss += loss.item()
-            total_correct += (outputs.argmax(dim = 1) == targets).sum().item()
             total_samples += samples.size(0)
-    return total_loss / total_samples, total_correct / total_samples
+    return total_loss / total_samples
