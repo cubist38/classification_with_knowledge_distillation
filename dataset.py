@@ -14,7 +14,7 @@ def class_to_index(data_root):
 
 CLASS_TO_INDEX = class_to_index('./data/train')
 
-class FruitDataset(Dataset):
+class CustomDataset(Dataset):
     def __init__(self, data_root, transform = None):
         self.transform = transform
         self.img_paths = []
@@ -49,7 +49,7 @@ if __name__ == '__main__':
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset = FruitDataset(data_root, transform=transform_train)
+    dataset = CustomDataset(data_root, transform=transform_train)
     dataloader = get_dataloader(dataset, 16)
     for samples, targets in tqdm.tqdm(dataloader, total = len(dataloader)):
         pass

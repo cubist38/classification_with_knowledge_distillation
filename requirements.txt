@@ -2,3 +2,4 @@ albumentations
 efficientnet-pytorch
 torch
 Pillow
+torchvision
