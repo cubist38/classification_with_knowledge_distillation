@@ -13,7 +13,7 @@ def class_to_index(data_root):
 
 
 class CustomDataset(Dataset):
-    def __init__(self, data_root, transform = None, mapping = class_to_index('./data/train')):
+    def __init__(self, data_root, mapping, transform = None):
         self.transform = transform
         self.img_paths = []
         self.targets = []
