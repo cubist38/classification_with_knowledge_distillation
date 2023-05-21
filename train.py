@@ -23,6 +23,7 @@ def get_args_parser():
 
 def main(args):
     print(args)
+    CLASS_TO_INDEX = class_to_index(os.path.join(args.data_root, 'train'))
     n_classes = len(CLASS_TO_INDEX)
     device = torch.device(args.device)
 
@@ -34,7 +35,7 @@ def main(args):
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform_train)
+    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform_train, mapping = CLASS_TO_INDEX)
     train_dataloader = get_dataloader(dataset_train, batch_size = args.batch_size)
     transform_test = transforms.Compose([
         transforms.Resize(380, interpolation= Image.BICUBIC),
@@ -42,7 +43,7 @@ def main(args):
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test)
+    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test, mapping = CLASS_TO_INDEX)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size, shuffle = False)
     optimizer = torch.optim.Adam(model.parameters(), lr = args.lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)

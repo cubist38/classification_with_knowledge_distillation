@@ -12,10 +12,8 @@ def class_to_index(data_root):
     return class_to_index
 
 
-CLASS_TO_INDEX = class_to_index('./data/train')
-
 class CustomDataset(Dataset):
-    def __init__(self, data_root, transform = None):
+    def __init__(self, data_root, transform = None, mapping = class_to_index('./data/train')):
         self.transform = transform
         self.img_paths = []
         self.targets = []
@@ -24,7 +22,7 @@ class CustomDataset(Dataset):
             for img_name in os.listdir(class_dir):
                 img_path = os.path.join(class_dir, img_name)
                 self.img_paths.append(img_path)
-                self.targets.append(CLASS_TO_INDEX[class_name])
+                self.targets.append(mapping[class_name])
 
     def __len__(self):
         return len(self.img_paths)
