@@ -18,6 +18,7 @@ def get_args_parser():
     parser.add_argument('--batch-size', default = 16, type = int)
     parser.add_argument('--num-epochs', default = 1000, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
+    parser.add_argument('--step-eval-epoch', default = 10, type = int)
 
     return parser
 
