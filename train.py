@@ -17,6 +17,7 @@ def get_args_parser():
     parser.add_argument('--device', default = 'cuda:0', type = str)
     parser.add_argument('--batch-size', default = 16, type = int)
     parser.add_argument('--num-epochs', default = 1000, type = int)
+    parser.add_argment('--data-root', default = './data', type = str)
 
     return parser
 
@@ -33,7 +34,7 @@ def main(args):
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_train = CustomDataset('./data/train', transform = transform_train)
+    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform_train)
     train_dataloader = get_dataloader(dataset_train, batch_size = args.batch_size)
     transform_test = transforms.Compose([
         transforms.Resize(380, interpolation= Image.BICUBIC),
@@ -41,7 +42,7 @@ def main(args):
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_test = CustomDataset('./data/test', transform =  transform_test)
+    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size, shuffle = False)
     optimizer = torch.optim.Adam(model.parameters(), lr = args.lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
