@@ -5,6 +5,7 @@ def train_one_epoch(model,
                     dataloader, 
                     criterion,
                     optimizer, 
+                    scheduler,
                     device):
     model.train()
     for samples, targets in dataloader:
@@ -15,6 +16,7 @@ def train_one_epoch(model,
         loss = criterion(outputs, targets)
         loss.backward()
         optimizer.step()
+    scheduler.step()
 
 def eval(model, dataloader, criterion, device):
     model.eval()
