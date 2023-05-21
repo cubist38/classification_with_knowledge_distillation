@@ -32,7 +32,7 @@ def eval(model, dataloader, criterion, device):
             targets = targets.to(device)
             outputs = model(samples)
             loss = criterion(outputs, targets)
-            total_loss += loss.item() * samples.size(0)
+            total_loss += loss.item()
             total_correct += (outputs.argmax(dim = 1) == targets).sum().item()
             total_samples += samples.size(0)
     return total_loss / total_samples, total_correct / total_samples
