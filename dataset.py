@@ -4,6 +4,7 @@ import os
 from PIL import Image
 import tqdm
 from torchvision import transforms
+import json
 
 
 class FruitDataset(Dataset):
@@ -11,15 +12,27 @@ class FruitDataset(Dataset):
         self.transform = transform
         self.img_paths = []
         self.targets = []
-        self.class_to_index = {}
-        for idx, class_name in enumerate(os.listdir(data_root)):
-            class_dir = os.path.join(data_root, class_name)
-            for img_name in os.listdir(class_dir):
-                img_path = os.path.join(class_dir, img_name)
-                self.img_paths.append(img_path)
-                self.targets.append(idx)
-            self.class_to_index[class_name] = idx
-
+        data_type = data_root.split('/')[-1]
+        if data_type == 'train':
+            class_to_index = {}
+            for idx, class_name in enumerate(os.listdir(data_root)):
+                class_dir = os.path.join(data_root, class_name)
+                for img_name in os.listdir(class_dir):
+                    img_path = os.path.join(class_dir, img_name)
+                    self.img_paths.append(img_path)
+                    self.targets.append(idx)
+                    class_to_index[class_name] = idx
+            with open('metadata.json', 'w') as f:
+                json.dump(class_to_index, f)
+        else:
+            with open('metadata.json', 'r') as f:
+                self.class_to_index = json.load(f)
+            for class_name in os.listdir(data_root):
+                class_dir = os.path.join(data_root, class_name)
+                for img_name in os.listdir(class_dir):
+                    img_path = os.path.join(class_dir, img_name)
+                    self.img_paths.append(img_path)
+                
     def __len__(self):
         return len(self.img_paths)
     
@@ -45,5 +58,5 @@ if __name__ == '__main__':
     ])
     dataset = FruitDataset(data_root, transform=transform_train)
     dataloader = get_dataloader(dataset, 16)
-    # for samples, targets in tqdm(dataloader, total = len(dataloader)):
-    #     pass
+    for samples, targets in tqdm.tqdm(dataloader, total = len(dataloader)):
+        pass
