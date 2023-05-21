@@ -3,7 +3,7 @@
 ## Description
 Author: Vuong Gia Huy
 
-The usage of knowledge distillation technique in classification problems. In this repo, i used the dataset of `EDWARD ZHANG` ([link](https://www.kaggle.com/datasets/sshikamaru/fruit-recognition)) on kaggle. I had balanced this dataset before i applied for training with knowledge distillation technique.
+The usage of knowledge distillation technique in classification problems. In this repo, i used the dataset of `SAMUEL CORTINHAS` ([link](https://www.kaggle.com/datasets/samuelcortinhas/sports-balls-multiclass-image-classification)) on kaggle. I had balanced this dataset before i applied for training with knowledge distillation technique.
 
 ## Installation
 ```
