@@ -4,35 +4,28 @@ import os
 from PIL import Image
 import tqdm
 from torchvision import transforms
-import json
 
+def class_to_index(data_root):
+    class_to_index = {}
+    for idx, class_name in enumerate(os.listdir(data_root)):
+        class_to_index[class_name] = idx
+    return class_to_index
+
+
+CLASS_TO_INDEX = class_to_index('./data/train')
 
 class FruitDataset(Dataset):
     def __init__(self, data_root, transform = None):
         self.transform = transform
         self.img_paths = []
         self.targets = []
-        data_type = data_root.split('/')[-1]
-        if data_type == 'train':
-            class_to_index = {}
-            for idx, class_name in enumerate(os.listdir(data_root)):
-                class_dir = os.path.join(data_root, class_name)
-                for img_name in os.listdir(class_dir):
-                    img_path = os.path.join(class_dir, img_name)
-                    self.img_paths.append(img_path)
-                    self.targets.append(idx)
-                    class_to_index[class_name] = idx
-            with open('metadata.json', 'w') as f:
-                json.dump(class_to_index, f)
-        else:
-            with open('metadata.json', 'r') as f:
-                self.class_to_index = json.load(f)
-            for class_name in os.listdir(data_root):
-                class_dir = os.path.join(data_root, class_name)
-                for img_name in os.listdir(class_dir):
-                    img_path = os.path.join(class_dir, img_name)
-                    self.img_paths.append(img_path)
-                
+        for class_name in os.listdir(data_root):
+            class_dir = os.path.join(data_root, class_name)
+            for img_name in os.listdir(class_dir):
+                img_path = os.path.join(class_dir, img_name)
+                self.img_paths.append(img_path)
+                self.targets.append(CLASS_TO_INDEX[class_name])
+
     def __len__(self):
         return len(self.img_paths)
     
