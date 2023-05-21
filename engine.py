@@ -1,4 +1,5 @@
 import torch
+import tqdm
 
 def train_one_epoch(model, 
                     dataloader, 
@@ -6,7 +7,7 @@ def train_one_epoch(model,
                     optimizer, 
                     device):
     model.train()
-    for samples, targets in dataloader:
+    for samples, targets in tqdm.tqdm(dataloader, total = len(dataloader)):
         samples = samples.to(device)
         targets = targets.to(device)
         optimizer.zero_grad()
@@ -21,7 +22,7 @@ def eval(model, dataloader, criterion, device):
     total_correct = 0
     total_samples = 0
     with torch.no_grad():
-        for samples, targets in dataloader:
+        for samples, targets in tqdm.tqdm(dataloader, total = len(dataloader)):
             samples = samples.to(device)
             targets = targets.to(device)
             outputs = model(samples)
