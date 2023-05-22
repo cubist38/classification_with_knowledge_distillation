@@ -59,8 +59,8 @@ def main(args):
     epochs = args.num_epochs
     criterion = torch.nn.CrossEntropyLoss()
 
-    if not os.path.exists(args.log_path):
-        os.mkdir(args.log_path)
+    if not os.path.exists(args.log_dir):
+        os.mkdir(args.log_dir)
     if not os.path.exists(args.save_dir):
         os.mkdir(args.save_dir)
     log_path = os.path.join(args.log_path, 'log.txt')
