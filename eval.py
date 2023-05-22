@@ -49,7 +49,7 @@ def main(args):
                     test_dataloader,
                     criterion,
                     device)
-    print('Epoch: {} - Eval loss: {:.4f}'.format(epoch, eval_loss))
+    print('Epoch: {} - Eval loss: {:.4f}'.format(0, eval_loss))
         
 if __name__ == '__main__':
     parser = get_args_parser()
