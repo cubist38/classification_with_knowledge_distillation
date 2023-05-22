@@ -14,7 +14,7 @@ def get_args_parser():
     parser.add_argument('--num-epochs', default = 1000, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
     parser.add_argument('--device', default = 'cuda:0', type = str)
-    parser.add_argument('--weights', default = './weights/efficientnet-b4.pth', type = str)
+    parser.add_argument('--weights', default = './weights/efficientnet-b4.pt', type = str)
     
 
     return parser
@@ -46,4 +46,7 @@ def main(args):
 
     print('Accuracy: ', total_true_predicted_samples / n_samples)
         
-
+if __name__ == '__main__':
+    parser = get_args_parser()
+    args = parser.parse_args()
+    main(args)
