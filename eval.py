@@ -11,7 +11,6 @@ def get_args_parser():
                         help="name of model to use")
     parser.add_argument('--device', default = 'cuda:0', type = str)
     parser.add_argument('--batch-size', default = 16, type = int)
-    parser.add_argument('--num-epochs', default = 1000, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
     parser.add_argument('--weights', default = './weights/efficientnet-b4.pth', type = str)
     
@@ -41,10 +40,10 @@ def main(args):
         samples = samples.to(device)
         targets = targets.to(device)
         outputs = model(samples)
-        predicted_targets = torch.argmax(torch.softmax(outputs, dim = 1), dim = 1)
-        total_true_predicted_samples +=  torch.sum(predicted_targets == targets).item()
+        #predicted_targets = torch.argmax(torch.softmax(outputs, dim = 1), dim = 1)
+        #total_true_predicted_samples +=  torch.sum(predicted_targets == targets).item()
 
-    print('Accuracy: ', total_true_predicted_samples / n_samples)
+    #print('Accuracy: ', total_true_predicted_samples / n_samples)
         
 if __name__ == '__main__':
     parser = get_args_parser()
