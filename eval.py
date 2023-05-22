@@ -26,6 +26,7 @@ def main(args):
     state_dict = torch.load(args.weights)
     model.load_state_dict(state_dict)
     model.to(device)
+    model.eval()
     transform_test = transforms.Compose([
         transforms.Resize(380, interpolation= Image.BICUBIC),
         transforms.CenterCrop(380),
