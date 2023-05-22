@@ -13,7 +13,7 @@ def get_args_parser():
     parser.add_argument('--batch-size', default = 16, type = int)
     parser.add_argument('--num-epochs', default = 1000, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
-    parser.add_argument('--weights', default = './weights/efficientnet-b4.pt', type = str)
+    parser.add_argument('--weights', default = './weights/efficientnet-b4.pth', type = str)
     
 
     return parser
@@ -33,7 +33,7 @@ def main(args):
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
     dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test, mapping = CLASS_TO_INDEX)
-    n_samples = len(dataset)
+    n_samples = len(dataset_test)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size, shuffle = False)
     total_true_predicted_samples = 0.0
     for samples, targets in tqdm.tqdm(test_dataloader, total = len(test_dataloader)):

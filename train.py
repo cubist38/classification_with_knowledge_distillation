@@ -19,7 +19,7 @@ def get_args_parser():
     parser.add_argument('--num-epochs', default = 1000, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
     parser.add_argument('--step-eval-epoch', default = 10, type = int)
-    parser.add_argument('--save-path', default = './weights/best.pt', type = str)
+    parser.add_argument('--save-path', default = './weights/best.pth', type = str)
     parser.add_argument('--log-path', default = './logs', type = str)
 
     return parser
