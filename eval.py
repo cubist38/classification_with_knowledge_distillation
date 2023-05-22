@@ -44,7 +44,12 @@ def main(args):
     #     total_true_predicted_samples +=  torch.sum(predicted_targets == targets).item()
 
     # print('Accuracy: ', total_true_predicted_samples / n_samples)
-    eval(model, test_dataloader, device)
+    criterion = torch.nn.CrossEntropyLoss()
+    eval_loss = eval(model,
+                    test_dataloader,
+                    criterion,
+                    device)
+    print('Epoch: {} - Eval loss: {:.4f}'.format(epoch, eval_loss))
         
 if __name__ == '__main__':
     parser = get_args_parser()
