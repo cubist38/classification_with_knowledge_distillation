@@ -63,7 +63,7 @@ def main(args):
         os.mkdir(args.log_dir)
     if not os.path.exists(args.save_dir):
         os.mkdir(args.save_dir)
-    log_path = os.path.join(args.log_path, 'log.txt')
+    log_path = os.path.join(args.log_dir, 'log.txt')
     with open(log_path, 'w') as f:
         for epoch in range(epochs):
             # Training
