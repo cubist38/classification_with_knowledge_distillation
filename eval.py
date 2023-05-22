@@ -2,7 +2,7 @@ import argparse
 from dataset import *
 import torch
 from models.model import build_model
-import tqdm
+from engine import eval
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Set parameters for Knowledge Distillation training', add_help=False)
@@ -36,14 +36,15 @@ def main(args):
     n_samples = len(dataset_test)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size, shuffle = False)
     total_true_predicted_samples = 0.0
-    for samples, targets in tqdm.tqdm(test_dataloader, total = len(test_dataloader)):
-        samples = samples.to(device)
-        targets = targets.to(device)
-        outputs = model(samples)
-        #predicted_targets = torch.argmax(torch.softmax(outputs, dim = 1), dim = 1)
-        #total_true_predicted_samples +=  torch.sum(predicted_targets == targets).item()
+    # for samples, targets in tqdm.tqdm(test_dataloader, total = len(test_dataloader)):
+    #     samples = samples.to(device)
+    #     targets = targets.to(device)
+    #     outputs = model(samples)
+    #     predicted_targets = torch.argmax(torch.softmax(outputs, dim = 1), dim = 1)
+    #     total_true_predicted_samples +=  torch.sum(predicted_targets == targets).item()
 
-    #print('Accuracy: ', total_true_predicted_samples / n_samples)
+    # print('Accuracy: ', total_true_predicted_samples / n_samples)
+    eval(model, test_dataloader, device)
         
 if __name__ == '__main__':
     parser = get_args_parser()
