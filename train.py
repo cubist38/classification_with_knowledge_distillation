@@ -19,6 +19,8 @@ def get_args_parser():
     parser.add_argument('--num-epochs', default = 1000, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
     parser.add_argument('--step-eval-epoch', default = 10, type = int)
+    parser.add_argument('--save-path', default = './weights/best.pt', type = str)
+    parser.add_argument('--log-path', default = './logs', type = str)
 
     return parser
 
@@ -75,8 +77,8 @@ def main(args):
                 weights = model.state_dict()
     if not os.path.exists('./weights'):
         os.mkdir('./weights')
-    weights_path = os.path.join('./weights', 'best.pth')
-    torch.save(weights, weights_path)
+
+    torch.save(weights, args.save_path)
 
 
 if __name__ == '__main__':
