@@ -19,8 +19,9 @@ def get_args_parser():
     parser.add_argument('--num-epochs', default = 1000, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
     parser.add_argument('--step-eval-epoch', default = 10, type = int)
-    parser.add_argument('--save-path', default = './weights/best.pth', type = str)
-    parser.add_argument('--log-path', default = './logs', type = str)
+    parser.add_argument('--save-dir', default = './weights', type = str)
+    parser.add_argument('--log-dir', default = './logs', type = str)
+    parser.add_argument('--resume', default = None, type = str)
 
     return parser
 
@@ -29,8 +30,10 @@ def main(args):
     CLASS_TO_INDEX = class_to_index(os.path.join(args.data_root, 'train'))
     n_classes = len(CLASS_TO_INDEX)
     device = torch.device(args.device)
-
     model = build_model(args.model, n_classes)
+    if args.resume is not None:
+        state_dict = torch.load(args.resume)
+        model.load_state_dict(state_dict)
     image_size = model.image_size()
     transform_train = transforms.Compose([
         transforms.RandomResizedCrop(image_size),
@@ -52,33 +55,40 @@ def main(args):
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
     model.to(device)
     min_loss = torch.inf
-    weights = None
+    best = None
     epochs = args.num_epochs
     criterion = torch.nn.CrossEntropyLoss()
 
-    for epoch in range(epochs):
-        # Training
-        train_loss = train_one_epoch(model,
-                                    train_dataloader, 
-                                    criterion,
-                                    optimizer, 
-                                    device)
-        scheduler.step()
-        print('Epoch: {} - Train loss: {:.4f}'.format(epoch, train_loss))
-        # Evaluation
-        if epoch > 0 and epoch % args.step_eval_epoch == 0:
-            eval_loss = eval(model,
-                            test_dataloader,
-                            criterion,
-                            device)
-            print('Epoch: {} - Eval loss: {:.4f}'.format(epoch, eval_loss))
-            if eval_loss < min_loss:
-                min_loss = eval_loss
-                weights = model.state_dict()
-    if not os.path.exists('./weights'):
-        os.mkdir('./weights')
-
-    torch.save(weights, args.save_path)
+    if not os.path.exists(args.log_path):
+        os.mkdir(args.log_path)
+    if not os.path.exists(args.save_dir):
+        os.mkdir(args.save_dir)
+    log_path = os.path.join(args.log_path, 'log.txt')
+    with open(log_path, 'w') as f:
+        for epoch in range(epochs):
+            # Training
+            train_loss = train_one_epoch(model,
+                                        train_dataloader, 
+                                        criterion,
+                                        optimizer, 
+                                        device)
+            scheduler.step()
+            print('Epoch: {} - Train loss: {:.4f}'.format(epoch, train_loss))
+            f.write('Epoch: {} - Train loss: {:.4f}\n'.format(epoch, train_loss))
+            # Evaluation
+            if epoch > 0 and epoch % args.step_eval_epoch == 0:
+                eval_loss = eval(model,
+                                test_dataloader,
+                                criterion,
+                                device)
+                print('Epoch: {} - Eval loss: {:.4f}'.format(epoch, eval_loss))
+                f.write('Epoch: {} - Eval loss: {:.4f}\n'.format(epoch, eval_loss))
+                if eval_loss < min_loss:
+                    min_loss = eval_loss
+                    best = model.state_dict()
+    
+    save_path = os.path.join(args.save_dir, 'best.pth')
+    torch.save(best, save_path)
 
 
 if __name__ == '__main__':
