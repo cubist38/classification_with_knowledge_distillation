@@ -33,7 +33,7 @@ def main(args):
     device = torch.device(args.device)
 
     
-    teacher_model = build_model('efficientnet-b4', num_classes = n_classes)
+    teacher_model = build_model('efficientnet-b4', n_classes = n_classes)
     image_size = teacher_model.image_size()
     checkpoint = torch.load(args.teacher_weights, map_location = torch.device('cpu'))
     teacher_model.load_state_dict(checkpoint)
