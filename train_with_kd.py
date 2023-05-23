@@ -55,7 +55,7 @@ def main(args):
     ])
     dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), mapping = CLASS_TO_INDEX,transform =  transform_test)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size)
-    student_model = build_model(args.backbone, num_classes = n_classes)
+    student_model = build_model(args.backbone, n_classes = n_classes)
     optimizer = torch.optim.Adam(student_model.parameters(), lr = args.lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
     student_model.to(device)
