@@ -45,7 +45,7 @@ def main(args):
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform =  transform_train)
+    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), mapping = CLASS_TO_INDEX, transform =  transform_train)
     train_dataloader = get_dataloader(dataset_train, batch_size = args.batch_size)
     transform_test = transforms.Compose([
         transforms.Resize(380, interpolation= PIL.Image.BICUBIC),
@@ -53,7 +53,7 @@ def main(args):
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test)
+    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), mapping = CLASS_TO_INDEX,transform =  transform_test)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size)
     student_model = build_model(args.backbone, num_classes = n_classes)
     optimizer = torch.optim.Adam(student_model.parameters(), lr = args.lr)
