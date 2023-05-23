@@ -9,7 +9,7 @@ def train_one_epoch_kd(student_model: torch.nn.Module,
     student_model.train()
     running_loss = 0.0
     total_samples = 0
-    for samples, targets in tqdm.tqdm(data_loader, len(data_loader)):
+    for samples, targets in tqdm.tqdm(data_loader, total = len(data_loader)):
         samples = samples.to(device)
         targets = targets.to(device)
         student_outputs = student_model(samples)
@@ -29,7 +29,7 @@ def eval_kd(student_model: torch.nn.Module,
     student_model.eval()
     total_loss = 0.0
     total_samples = 0
-    for samples, labels in tqdm.tqdm(data_loader, len(data_loader)):
+    for samples, labels in tqdm.tqdm(data_loader, total = len(data_loader)):
         samples = samples.to(device)
         labels = labels.to(device)
         outputs = student_model(samples)
