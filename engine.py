@@ -19,7 +19,7 @@ def train_one_epoch_kd(student_model: torch.nn.Module,
         loss.backward()
         optimizer.step()
         running_loss += loss.item()
-        total_samples = samples.size(0)
+        total_samples += samples.size(0)
     return running_loss / total_samples
 
 def eval_kd(student_model: torch.nn.Module,
