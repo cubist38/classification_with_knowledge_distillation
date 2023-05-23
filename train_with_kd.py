@@ -36,7 +36,8 @@ def get_args_parser():
     parser.add_argument('--data-root', default = './data', type = str)
     parser.add_argument('--batch-size', default = 16, type = int)
     parser.add_argument('--num-epochs', default = 1000, type = int)
-    parser.add_argument('--student-weights', default = './student_weights.pt')
+    parser.add_argument('--save-dir', default = './weights', type = str)
+    parser.add_argument('--log-dir', default = './logs', type = str)
 
     return parser    
 
@@ -77,34 +78,41 @@ def main(args):
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
     student_model.to(device)
     min_loss = torch.inf
-    weights = None
+    best = None
     epochs = args.num_epochs
     criterion = torch.nn.CrossEntropyLoss()
     kd = KnowledgeDistillationLoss(criterion, 10, 0.8)
 
-    for epoch in range(epochs):
-        # Training
-        train_loss = train_one_epoch_kd(student_model,
-                                        teacher_model,
-                                        kd,
-                                        train_dataloader, 
-                                        optimizer, 
-                                        device)
-        scheduler.step()
-        print('Epoch: {} - Train loss: {:.4f}'.format(epoch, train_loss))
-        # Evaluation
-        if epoch > 0:
-            eval_loss = eval_kd(student_model,
-                                criterion,
-                                test_dataloader,
-                                device)
-            print('Epoch: {} - Eval loss: {:.4f}'.format(epoch, eval_loss))
-            if eval_loss < min_loss:
-                min_loss = eval_loss
-                weights = student_model.state_dict()
-
-    torch.save(weights, args.student_weights)
-
+    if not os.path.exists(args.save_dir):
+        os.mkdir(args.save_dir)
+    if not os.path.exists(args.log_dir):
+        os.mkdir(args.log_dir)
+    save_path = os.path.join(args.save_dir, 'student_weights.pt')
+    log_path = os.path.join(args.log_dir, 'log.txt')
+    with open(log_path, 'w') as f:
+        for epoch in range(epochs):
+            # Training
+            train_loss = train_one_epoch_kd(student_model,
+                                            teacher_model,
+                                            kd,
+                                            train_dataloader, 
+                                            optimizer, 
+                                            device)
+            scheduler.step()
+            print('Epoch: {} - Train loss: {:.4f}'.format(epoch, train_loss))
+            f.write('Epoch: {} - Train loss: {:.4f}\n'.format(epoch, train_loss))
+            # Evaluation
+            if epoch > 0:
+                eval_loss = eval_kd(student_model,
+                                    criterion,
+                                    test_dataloader,
+                                    device)
+                print('Epoch: {} - Eval loss: {:.4f}'.format(epoch, eval_loss))
+                f.write('Epoch: {} - Eval loss: {:.4f}\n'.format(epoch, eval_loss))
+                if eval_loss < min_loss:
+                    min_loss = eval_loss
+                    best = student_model.state_dict()
+    torch.save(best, save_path)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser('Training with Knowledge Distillation script', parents=[get_args_parser()])
