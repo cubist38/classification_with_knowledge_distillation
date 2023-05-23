@@ -33,7 +33,7 @@ def get_args_parser():
     parser.add_argument('--lr', default=1e-3, type = float)
     parser.add_argument('--teacher-weights', required = True, default = './weights/teacher_weights.pt', type = str)
     parser.add_argument('--device', default = 'cuda:0', type = str)
-    parser.add_argument('--metadata', default = './', type = str)
+    parser.add_argument('--data-root', default = './data', type = str)
     parser.add_argument('--batch-size', default = 16, type = int)
     parser.add_argument('--num-epochs', default = 1000, type = int)
     parser.add_argument('--student-weights', default = './student_weights.pt')
@@ -58,18 +58,16 @@ def main(args):
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_train = FruitDataset(, 
-                                transform =  transform_train)
-    train_dataloader = get_train_dataloader(dataset_train, batch_size = args.batch_size)
+    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform =  transform_train)
+    train_dataloader = get_dataloader(dataset_train, batch_size = args.batch_size)
     transform_test = transforms.Compose([
         transforms.Resize(380, interpolation= PIL.Image.BICUBIC),
         transforms.CenterCrop(380),
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_test = FruitDataset(dataset_info_path = os.path.join(args.metadata, 'test.json'), 
-                                transform =  transform_test)
-    test_dataloader = get_test_dataloader(dataset_test, batch_size = args.batch_size)
+    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test)
+    test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size)
     student_model = torchvision.models.mobilenet_v2(weights = MobileNet_V2_Weights.IMAGENET1K_V2)
     student_model.classifier = torch.nn.Sequential(
         torch.nn.Dropout(p=0.2, inplace=True),
@@ -86,20 +84,20 @@ def main(args):
 
     for epoch in range(epochs):
         # Training
-        train_loss = train_one_epoch(student_model,
-                                    teacher_model,
-                                    kd,
-                                    train_dataloader, 
-                                    optimizer, 
-                                    device)
+        train_loss = train_one_epoch_kd(student_model,
+                                        teacher_model,
+                                        kd,
+                                        train_dataloader, 
+                                        optimizer, 
+                                        device)
         scheduler.step()
         print('Epoch: {} - Train loss: {:.4f}'.format(epoch, train_loss))
         # Evaluation
         if epoch > 0:
-            eval_loss = eval(student_model,
-                            criterion,
-                            test_dataloader,
-                            device)
+            eval_loss = eval_kd(student_model,
+                                criterion,
+                                test_dataloader,
+                                device)
             print('Epoch: {} - Eval loss: {:.4f}'.format(epoch, eval_loss))
             if eval_loss < min_loss:
                 min_loss = eval_loss
