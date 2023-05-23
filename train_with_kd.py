@@ -55,11 +55,7 @@ def main(args):
     ])
     dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size)
-    student_model = torchvision.models.mobilenet_v2(weights = MobileNet_V2_Weights.IMAGENET1K_V2)
-    student_model.classifier = torch.nn.Sequential(
-        torch.nn.Dropout(p=0.2, inplace=True),
-        torch.nn.Linear(in_features=1280, out_features = n_classes, bias=True),
-    )
+    student_model = build_model(args.backbone, num_classes = n_classes)
     optimizer = torch.optim.Adam(student_model.parameters(), lr = args.lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
     student_model.to(device)
