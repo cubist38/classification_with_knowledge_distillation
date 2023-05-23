@@ -10,21 +10,6 @@ import PIL
 from models.model import build_model
  
 
-CLASSES = {
-    '0': 'banana', 
-    '1': 'bed', 
-    '2': 'bicycle', 
-    '3': 'book', 
-    '4': 'bottle', 
-    '5': 'car', 
-    '6': 'cat', 
-    '7': 'clock', 
-    '8': 'cup', 
-    '9': 'dog', 
-    '10': 'laptop', 
-    '11': 'sofa'
-}
-
 def get_args_parser():
     parser = argparse.ArgumentParser('Set parameters for Knowledge Distillation training', add_help=False)
     
@@ -43,7 +28,8 @@ def get_args_parser():
 
 def main(args):
     print(args)
-    n_classes = len(CLASSES)
+    CLASS_TO_INDEX = class_to_index(os.path.join(args.data_root, 'train'))
+    n_classes = len(CLASS_TO_INDEX)
     device = torch.device(args.device)
 
     
