@@ -2,18 +2,18 @@ import argparse
 from dataset import *
 import torch
 from models.model import build_model
-from engine import eval
+import PIL
+from torchvision import transforms
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Set parameters for Knowledge Distillation training', add_help=False)
     
-    parser.add_argument('--model', default='efficientnet-b4', type = str,
+    parser.add_argument('--model', default='efficientnet_b4', type = str,
                         help="name of model to use")
     parser.add_argument('--device', default = 'cuda:0', type = str)
     parser.add_argument('--batch-size', default = 16, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
     parser.add_argument('--weights', default = './weights/efficientnet-b4.pth', type = str)
-    
 
     return parser
 
@@ -26,13 +26,13 @@ def main(args):
     model.load_state_dict(state_dict)
     model.to(device)
     model.eval()
-    transform_test = transforms.Compose([
-        transforms.Resize(380, interpolation= Image.BICUBIC),
-        transforms.CenterCrop(380),
+    transform = transforms.Compose([
+        transforms.Resize(224, interpolation= PIL.Image.BICUBIC),
+        transforms.CenterCrop(256),
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test, mapping = CLASS_TO_INDEX)
+    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform, mapping = CLASS_TO_INDEX)
     n_samples = len(dataset_test)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size, shuffle = False)
     total_true_predicted_samples = 0.0
