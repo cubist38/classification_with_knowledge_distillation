@@ -47,7 +47,6 @@ def train_one_epoch(model,
     running_loss = 0.0
     total_samples = 0
     for samples, targets in tqdm.tqdm(dataloader, total = len(dataloader)):
-        print(samples.shape)
         samples = samples.to(device)
         targets = targets.to(device)
         optimizer.zero_grad()
