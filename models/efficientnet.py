@@ -23,7 +23,7 @@ class CustomEfficientNet(BaseModel):
             else:
                 self.model = torchvision.models.efficientnet_v2_s(weights = None)
             self.model.classifier = nn.Sequential(
-                nn.Dropout(p=0.4, inplace=True),
+                nn.Dropout(p=0.2, inplace=True),
                 nn.Linear(in_features=1280, out_features = num_classes, bias=True),
             )
             self.transform = EfficientNet_V2_S_Weights.IMAGENET1K_V1.transforms()
