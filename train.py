@@ -37,15 +37,21 @@ def main(args):
     else:
         model = build_model(model_name = args.model, n_classes = n_classes)
     #transform = model.get_transform()
-    transform = transforms.Compose([
+    transform_train = transforms.Compose([
         transforms.Resize(224, interpolation= PIL.Image.BICUBIC),
-        transforms.CenterCrop(380),
+        transforms.CenterCrop(256),
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
-    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform, mapping = CLASS_TO_INDEX)
+    transform_test = transforms.Compose([
+        transforms.Resize(380, interpolation= PIL.Image.BICUBIC),
+        transforms.CenterCrop(384),
+        transforms.ToTensor(),
+        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+    ])
+    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform_train, mapping = CLASS_TO_INDEX)
     train_dataloader = get_dataloader(dataset_train, batch_size = args.batch_size)
-    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform, mapping = CLASS_TO_INDEX)
+    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test, mapping = CLASS_TO_INDEX)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size, shuffle = False)
     optimizer = torch.optim.Adam(model.parameters(), lr = args.lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)

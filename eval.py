@@ -27,8 +27,8 @@ def main(args):
     model.to(device)
     model.eval()
     transform = transforms.Compose([
-        transforms.Resize(224, interpolation= PIL.Image.BICUBIC),
-        transforms.CenterCrop(380),
+        transforms.Resize(380, interpolation= PIL.Image.BICUBIC),
+        transforms.CenterCrop(384),
         transforms.ToTensor(),
         transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
     ])
