@@ -17,10 +17,3 @@ class CustomEfficientNet(BaseModel):
                 nn.Linear(in_features=1280, out_features = num_classes, bias=True),
             )
             self.transform = EfficientNet_V2_L_Weights.IMAGENET1K_V1.transforms()
-
-    
-    def get_transform(self):
-        return self.transform
-
-    def forward(self, x):
-        return self.model(x)

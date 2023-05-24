@@ -15,6 +15,3 @@ class CustomMobileNet(BaseModel):
             nn.Linear(in_features=1280, out_features = num_classes, bias=True),
         )
         self.transform = MobileNet_V2_Weights.IMAGENET1K_V2.transforms()
-
-    def forward(self, x):
-        return self.model(x)
