@@ -13,7 +13,7 @@ def get_args_parser():
     parser.add_argument('--device', default = 'cuda:0', type = str)
     parser.add_argument('--batch-size', default = 16, type = int)
     parser.add_argument('--data-root', default = './data', type = str)
-    parser.add_argument('--weights', default = './weights/efficientnet-b4.pth', type = str)
+    parser.add_argument('--weights', default = './weights/best.pth', type = str)
 
     return parser
 
