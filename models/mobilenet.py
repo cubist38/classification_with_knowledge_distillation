@@ -4,7 +4,7 @@ from models.base_model import BaseModel
 import torch.nn as nn
 
 class CustomMobileNet(BaseModel):
-    def __init__(self, model_name = 'mobilenetv2', pretrained = True, num_classes = 10):
+    def __init__(self, model_name = 'mobilenet_v2', pretrained = True, num_classes = 10):
         super().__init__()
         if model_name == 'mobilenet_v2':
             if pretrained:
@@ -16,3 +16,10 @@ class CustomMobileNet(BaseModel):
                 nn.Linear(in_features=1280, out_features = num_classes, bias=True),
             )
             self.transform = MobileNet_V2_Weights.IMAGENET1K_V2.transforms()
+
+    def forward(self, x):
+        return self.model(x)
+
+    def get_transform(self):
+        assert self.transform is not None, 'You have to define model in your custom model class'
+        return self.transform
