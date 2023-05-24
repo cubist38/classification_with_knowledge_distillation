@@ -21,7 +21,7 @@ def main(args):
     device = torch.device(args.device)
     CLASS_TO_INDEX = class_to_index(os.path.join(args.data_root, 'train'))
     n_classes = len(CLASS_TO_INDEX)
-    model = build_model(args.model, n_classes)
+    model = build_model(model_name = args.model, n_classes = n_classes, pretrained = False)
     state_dict = torch.load(args.weights)
     model.load_state_dict(state_dict)
     model.to(device)
