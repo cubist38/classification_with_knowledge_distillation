@@ -30,10 +30,12 @@ def main(args):
     CLASS_TO_INDEX = class_to_index(os.path.join(args.data_root, 'train'))
     n_classes = len(CLASS_TO_INDEX)
     device = torch.device(args.device)
-    model = build_model(args.model, n_classes)
     if args.resume is not None:
+        model = build_model(args.model, n_classes, pretrained = False)
         state_dict = torch.load(args.resume)
         model.load_state_dict(state_dict)
+    else:
+        model = build_model(args.model, n_classes)
     transform = model.transform()
     dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform, mapping = CLASS_TO_INDEX)
     train_dataloader = get_dataloader(dataset_train, batch_size = args.batch_size)
