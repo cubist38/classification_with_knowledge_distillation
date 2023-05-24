@@ -11,7 +11,7 @@ from models.model import build_model
 def get_args_parser():
     parser = argparse.ArgumentParser('Set parameters for Knowledge Distillation training', add_help=False)
     
-    parser.add_argument('--model', default='efficientnet-b4', type = str,
+    parser.add_argument('--model', default='efficientnet_v2_l', type = str,
                         help="name of model to use")
     parser.add_argument('--lr', default=1e-3, type = float)
     parser.add_argument('--device', default = 'cuda:0', type = str)
@@ -35,9 +35,9 @@ def main(args):
         state_dict = torch.load(args.resume)
         model.load_state_dict(state_dict)
     transform = model.transform()
-    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform_train, mapping = CLASS_TO_INDEX)
+    dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform, mapping = CLASS_TO_INDEX)
     train_dataloader = get_dataloader(dataset_train, batch_size = args.batch_size)
-    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform_test, mapping = CLASS_TO_INDEX)
+    dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform, mapping = CLASS_TO_INDEX)
     test_dataloader = get_dataloader(dataset_test, batch_size = args.batch_size, shuffle = False)
     optimizer = torch.optim.Adam(model.parameters(), lr = args.lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=30, gamma=0.1)
