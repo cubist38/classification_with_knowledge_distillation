@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torchvision
 from torchvision.models.efficientnet import EfficientNet_V2_L_Weights
-from base_model import BaseModel
+from models.base_model import BaseModel
 
 
 class CustomEfficientNet(BaseModel):

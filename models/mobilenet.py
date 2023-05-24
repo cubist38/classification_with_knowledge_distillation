@@ -1,6 +1,6 @@
 import torchvision
 from torchvision.models.mobilenetv2 import MobileNet_V2_Weights
-from base_model import BaseModel
+from models.base_model import BaseModel
 import torch.nn as nn
 
 class CustomMobileNet(BaseModel):
