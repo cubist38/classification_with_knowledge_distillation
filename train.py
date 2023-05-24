@@ -36,7 +36,7 @@ def main(args):
         model.load_state_dict(state_dict)
     else:
         model = build_model(args.model, n_classes)
-    transform = model.transform()
+    transform = model.get_transform()
     dataset_train = CustomDataset(os.path.join(args.data_root, 'train'), transform = transform, mapping = CLASS_TO_INDEX)
     train_dataloader = get_dataloader(dataset_train, batch_size = args.batch_size)
     dataset_test = CustomDataset(os.path.join(args.data_root, 'test'), transform =  transform, mapping = CLASS_TO_INDEX)
